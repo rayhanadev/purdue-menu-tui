@@ -1,5 +1,7 @@
 # pmenu
 
+<video src="demo.mp4" controls></video>
+
 A terminal UI for browsing Purdue University dining court menus.
 
 Built with [OpenTUI](https://github.com/anomalyco/opentui) and [Bun](https://bun.com).
