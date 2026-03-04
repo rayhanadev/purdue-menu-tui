@@ -23,7 +23,11 @@ import { useVimNav } from "../hooks/useVimNav.ts";
 import { useFilter } from "../hooks/useFilter.ts";
 import { FilterInput } from "./FilterInput.tsx";
 import { CenteredMessage } from "./CenteredMessage.tsx";
-import type { DiningCourtCategory, UpcomingFavoriteEntry, AsyncState } from "../lib/types";
+import type {
+  DiningCourtCategory,
+  UpcomingFavoriteEntry,
+  AsyncState,
+} from "../lib/types";
 
 export function LocationList() {
   const favoriteCourts = useAtomValue(favoriteCourtsAtom);
@@ -43,7 +47,9 @@ export function LocationList() {
 
   const { data: categories, error, loading } = catState;
 
-  const [upcomingFavorites, setUpcomingFavorites] = useState<UpcomingFavoriteEntry[]>([]);
+  const [upcomingFavorites, setUpcomingFavorites] = useState<
+    UpcomingFavoriteEntry[]
+  >([]);
   const filter = useFilter(locationFilterQueryAtom);
 
   const groups = useMemo(
@@ -56,7 +62,10 @@ export function LocationList() {
     [groups, filter.query],
   );
 
-  const allEntries = useMemo(() => filteredGroups.flatMap((g) => g.entries), [filteredGroups]);
+  const allEntries = useMemo(
+    () => filteredGroups.flatMap((g) => g.entries),
+    [filteredGroups],
+  );
 
   const nav = useVimNav(allEntries.length);
 
@@ -108,8 +117,10 @@ export function LocationList() {
     }
   });
 
-  if (error) return <CenteredMessage color="#FF6B6B">Error: {error}</CenteredMessage>;
-  if (loading) return <CenteredMessage>Loading dining locations...</CenteredMessage>;
+  if (error)
+    return <CenteredMessage color="#FF6B6B">Error: {error}</CenteredMessage>;
+  if (loading)
+    return <CenteredMessage>Loading dining locations...</CenteredMessage>;
 
   let flatIndex = 0;
 
@@ -118,7 +129,8 @@ export function LocationList() {
       {filter.query !== null && !filter.inputActive ? (
         <box paddingX={1} height={1}>
           <text fg="#888888">
-            <span fg="#CEB888">Filter:</span> {filter.query} ({allEntries.length} match
+            <span fg="#CEB888">Filter:</span> {filter.query} (
+            {allEntries.length} match
             {allEntries.length !== 1 ? "es" : ""})
           </text>
         </box>
@@ -127,7 +139,11 @@ export function LocationList() {
       <scrollbox flexGrow={1}>
         <box flexDirection="column" paddingX={1}>
           {filteredGroups.map((group, gi) => (
-            <box key={group.name} flexDirection="column" marginTop={gi === 0 ? 1 : 0}>
+            <box
+              key={group.name}
+              flexDirection="column"
+              marginTop={gi === 0 ? 1 : 0}
+            >
               <box>
                 <text fg="#555555">
                   <strong>── {group.name} ──</strong>
@@ -186,14 +202,16 @@ function LocationRow({
   const suffix = `${isFav ? " [*]" : ""}${entry.open ? "" : " [x]"}`;
   let nameColor: string;
   if (isSelected) nameColor = "#CEB888";
-  else if (entry.open) nameColor = "#555555";
-  else nameColor = "#AAAAAA";
+  else if (entry.open) nameColor = "#AAAAAA";
+  else nameColor = "#555555";
   const subColor = isSelected ? "#555555" : "#444444";
   const label = `${prefix}${name}${suffix}`;
 
   return (
     <box flexDirection="column" marginBottom={1}>
-      <text fg={nameColor}>{isSelected ? <strong>{label}</strong> : label}</text>
+      <text fg={nameColor}>
+        {isSelected ? <strong>{label}</strong> : label}
+      </text>
       <text fg={subColor}>
         {"   "}
         {entry.statusText}
@@ -202,7 +220,11 @@ function LocationRow({
   );
 }
 
-function UpcomingFavoritesSection({ entries }: { entries: UpcomingFavoriteEntry[] }) {
+function UpcomingFavoritesSection({
+  entries,
+}: {
+  entries: UpcomingFavoriteEntry[];
+}) {
   return (
     <box flexDirection="column" marginTop={1}>
       <box>
