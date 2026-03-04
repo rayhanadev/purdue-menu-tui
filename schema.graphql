@@ -1,0 +1,514 @@
+schema {
+  query: MenusQuery
+  mutation: MenusMutation
+}
+
+type Address {
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+  country: String!
+  countryCode: String!
+}
+
+type AssemblyPrintList implements Node, PrintList {
+  id: ID!
+  printListId: Guid
+  title: String
+  subtitle: String
+  creationTime: DateTimeOffset!
+  modifiedTime: DateTimeOffset!
+  sections: [PrintAssemblySection]
+}
+
+input AssemblyPrintListUpdate {
+  id: ID!
+  title: String
+  subtitle: String
+  sections: [PrintListSectionInput]
+}
+
+type Cbord {
+  items(
+    search: String
+    skip: Int = 0
+    take: Int = 10
+  ): [CbordItem]
+  serviceUnit(cbordId: Int): ServiceUnit
+  serviceUnits: [ServiceUnit]
+}
+
+type CbordItem implements Node {
+  id: ID!
+  cbordItemId: Int!
+  name: String
+  commonName: String
+  formalName: String
+  keyName: String
+  dateCreated: DateTime
+  dateModified: DateTime
+  nutritionFacts: [CbordNutritionFact]
+  traits: [Trait]
+  ingredients: String
+  components: [CbordItem]
+  componentIds: [Int]
+}
+
+type CbordItemAppearance {
+  date: DateTime!
+  meal: String
+  courseId: Int
+  courseName: String
+  keyName: String
+  itemName: String
+  formalName: String
+  cbordItemId: Int!
+  detail: CbordItem
+}
+
+type CbordNutritionFact {
+  name: String!
+  value: Decimal
+  label: String
+  dailyValueLabel: String
+}
+
+type ComponentAdministration {
+  itemId: Guid!
+  specialName: String
+  item: Item
+  isDisplayed: Boolean!
+  isPublished: Boolean!
+}
+
+input ComponentInput {
+  itemId: Guid!
+  specialName: String
+  isDisplayed: Boolean!
+}
+
+type DailyMenu {
+  meals: [MealMenu!]!
+  notes: String!
+}
+
+scalar Date
+
+scalar DateTime
+
+scalar DateTimeOffset
+
+scalar Decimal
+
+type DeletedNode {
+  deletedNodeId: ID
+}
+
+type DiningCourt implements Node, Location {
+  id: ID!
+  name: String!
+  category: String!
+  phone: String
+  latitude: Float
+  longitude: Float
+  address: Address
+  logoUrl: Uri
+  darkModeLogoUrl: Uri
+  bannerUrl: Uri
+  url: Uri
+  transactMobileOrderId: Int
+  formalName: String
+  dailyMenu(date: Date!): DailyMenu
+  adminMenu(date: Date!): MenuConfiguration
+  publishStatus(
+    startDate: Date!
+    endDate: Date!
+  ): [PublishStatus!]!
+  lineLength: String
+  isLineLengthCrowdsourcingEnabled: Boolean!
+  normalHours: [DiningCourtNormalHoursPeriod!]!
+  upcomingMeals: [UpcomingMeal!]!
+  googlePlaceId: String
+}
+
+type DiningCourtCategory {
+  name: String
+  diningCourts: [DiningCourt!]!
+}
+
+type DiningCourtNormalHoursDay {
+  dayOfWeek: String!
+  meals: [DiningCourtNormalHoursMeal!]!
+}
+
+type DiningCourtNormalHoursMeal {
+  name: String
+  startTime: TimeOnly!
+  endTime: TimeOnly!
+}
+
+type DiningCourtNormalHoursPeriod {
+  id: ID!
+  name: String
+  effectiveDate: DateTime!
+  days: [DiningCourtNormalHoursDay!]!
+}
+
+type FavoritedItem implements Node {
+  id: ID!
+  favoriteId: Guid!
+  item: Item!
+  dateAdded: DateTimeOffset
+}
+
+scalar Guid
+
+scalar HexColorCode
+
+type Item implements Node {
+  id: ID!
+  itemId: Guid!
+  name: String!
+  nutritionFacts: [NutritionFact!]
+  traits: [Trait!]
+  ingredients: String
+  components: [Item!]
+  appearances: [ItemOccurrence!]!
+  isCbordItem: Boolean!
+  isBlacklisted: Boolean!
+  isDiscontinued: Boolean!
+  isNutritionReady: Boolean!
+  isFlaggedForCurrentUser: Boolean!
+  isHiddenForCurrentUser: Boolean!
+}
+
+type ItemAdministration {
+  itemMenuId: Guid!
+  specialName: String
+  item: Item
+  isDisplayed: Boolean!
+  isPublished: Boolean!
+  components: [ComponentAdministration!]
+}
+
+type ItemAppearance implements Node {
+  id: ID!
+  itemMenuId: Guid!
+  item: Item!
+  displayName: String!
+  specialName: String
+  hasComponents: Boolean!
+  components: [ItemAppearance!]
+}
+
+input ItemInput {
+  itemMenuId: Guid
+  itemId: Guid!
+  specialName: String
+  isDisplayed: Boolean!
+  components: [ComponentInput]
+}
+
+type ItemOccurrence {
+  locationName: String!
+  date: DateTimeOffset!
+  mealName: String!
+  stationName: String!
+}
+
+type LineCardPrintList implements Node, PrintList {
+  id: ID!
+  printListId: Guid
+  title: String
+  creationTime: DateTimeOffset!
+  modifiedTime: DateTimeOffset!
+  items: [PrintItem]
+}
+
+input LineCardPrintListUpdate {
+  id: ID
+  title: String
+  items: [PrintItemInput]
+}
+
+interface Location {
+  id: ID!
+  name: String!
+  category: String!
+  phone: String
+  latitude: Float
+  longitude: Float
+  address: Address
+  logoUrl: Uri
+  darkModeLogoUrl: Uri
+  bannerUrl: Uri
+  url: Uri
+  transactMobileOrderId: Int
+}
+
+type LocationCategory {
+  name: String
+  locations: [Location!]!
+}
+
+type MealConfiguration {
+  id: Guid!
+  name: String!
+  state: MealState!
+  startTime: TimeOnly
+  endTime: TimeOnly
+  normalStartTime: TimeOnly
+  normalEndTime: TimeOnly
+  notes: String
+  stations: [StationConfiguration!]!
+}
+
+input MealInput {
+  id: Guid!
+  name: String!
+  state: MealState!
+  startTime: TimeOnly
+  endTime: TimeOnly
+  notes: String
+  stations: [StationInput]
+}
+
+type MealMenu implements Node {
+  id: ID!
+  name: String!
+  status: MealStatus!
+  type: MealType!
+  startTime: DateTimeOffset
+  endTime: DateTimeOffset
+  notes: String
+  stations: [Station!]!
+}
+
+enum MealState {
+  OPEN
+  CLOSED
+  HIDDEN
+}
+
+enum MealStatus {
+  OPEN
+  CLOSED
+  UNAVAILABLE
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+  UNKNOWN
+}
+
+type MenuConfiguration {
+  id: Guid!
+  notes: String
+  meals: [MealConfiguration!]!
+}
+
+input MenuInput {
+  locationId: String!
+  date: Date!
+  meals: [MealInput]
+  notes: String
+}
+
+type MenusMutation {
+  updateMenu(menu: MenuInput!): MenuConfiguration
+  createNonCbordItem(name: String!): Item
+  setPublishStatus(
+    locationId: String!
+    date: Date!
+    isPublished: Boolean!
+    meals: [String]
+  ): MenuConfiguration
+  setBlacklisted(
+    itemId: Guid!
+    isBlacklisted: Boolean!
+  ): Item!
+  addFavoriteById(id: ID!): [FavoritedItem!]!
+  addFavoriteByItemId(itemId: Guid!): [FavoritedItem!]!
+  removeFavorite(id: ID!): [FavoritedItem!]!
+  removeFavoriteByFavoriteId(favoriteId: Guid!): [FavoritedItem!]!
+  editFavoritesWithItemIds(itemIds: [Guid!]!): [FavoritedItem!]!
+  editFavorites(ids: [ID!]!): [FavoritedItem!]!
+  createPrintList(
+    title: String!
+    type: PrintListType!
+  ): PrintList
+  modifyPrintItem(input: PrintItemInput!): PrintItem
+  modifyLineCardPrintList(input: LineCardPrintListUpdate!): LineCardPrintList
+  modifyAssemblyPrintList(input: AssemblyPrintListUpdate!): AssemblyPrintList
+  modifyAssemblyPrintSection(input: PrintListSectionInput!): PrintAssemblySection
+  deletePrintList(id: ID!): DeletedNode
+}
+
+type MenusQuery {
+  node(id: ID!): Node
+  currentUser: User
+  locations: [Location]
+  locationCategories: [LocationCategory!]!
+  diningCourts: [DiningCourt]
+  diningCourt(id: ID): DiningCourt
+  diningCourtByLocationId(locationId: String): DiningCourt
+  diningCourtByName(name: String!): DiningCourt
+  diningCourtCategories: [DiningCourtCategory!]!
+  itemAppearance(itemMenuId: Guid!): ItemAppearance!
+  itemByItemId(itemId: Guid!): Item!
+  itemSearch(name: String!): [Item!]!
+  dietaryTraits: [Trait!]!
+  retailLocations: [RetailLocation]
+  retailLocation(id: ID): RetailLocation
+  printLists: [PrintList]
+  cbord: Cbord
+}
+
+interface Node {
+  id: ID!
+}
+
+type NutritionFact {
+  name: String
+  value: Float
+  label: String
+  dailyValueLabel: String
+}
+
+type PrintAssemblySection implements Node {
+  id: ID!
+  name: String
+  items: [PrintItem]
+}
+
+type PrintItem implements Node {
+  id: ID!
+  cbordItemId: Int
+  specialName: String
+  quantity: Int!
+  cbordItem: CbordItem
+}
+
+input PrintItemInput {
+  id: ID
+  cbordItemId: Int
+  specialName: String
+  quantity: Int
+}
+
+interface PrintList {
+  id: ID!
+  printListId: Guid
+  title: String
+  creationTime: DateTimeOffset!
+  modifiedTime: DateTimeOffset!
+}
+
+input PrintListSectionInput {
+  id: ID
+  name: String
+  items: [PrintItemInput]
+}
+
+enum PrintListType {
+  LINE_ITEM_CARD
+  ASSEMBLY_CARD
+  LINE_CARD
+  ASSEMBLY
+}
+
+type PublishStatus {
+  date: Date!
+  isOpen: Boolean!
+  isPublished: Boolean!
+  isAbnormal: Boolean!
+  needsAttention: Boolean!
+}
+
+type RetailLocation implements Node, Location {
+  id: ID!
+  name: String!
+  category: String!
+  phone: String
+  latitude: Float
+  longitude: Float
+  address: Address
+  logoUrl: Uri
+  darkModeLogoUrl: Uri
+  bannerUrl: Uri
+  url: Uri
+  transactMobileOrderId: Int
+  menuUrl: Uri
+}
+
+type ServiceUnit implements Node {
+  id: ID!
+  cbordId: Int!
+  name: String
+  menu(date: Date): [CbordItemAppearance]
+}
+
+type Station implements Node {
+  id: ID!
+  name: String
+  items: [ItemAppearance!]!
+  notes: String
+  iconUrl: Uri
+  foregroundColor: HexColorCode
+  backgroundColor: HexColorCode
+}
+
+type StationConfiguration {
+  id: Guid!
+  stationId: Guid!
+  normalName: String!
+  specialName: String
+  notes: String
+  items: [ItemAdministration!]!
+}
+
+input StationInput {
+  id: Guid!
+  stationId: Guid!
+  specialName: String
+  notes: String
+  items: [ItemInput]
+}
+
+scalar TimeOnly
+
+type Trait implements Node {
+  id: ID!
+  name: String!
+  type: String!
+  pngIcon: Uri
+  svgIcon: Uri
+  svgIconWithoutBackground: Uri
+}
+
+type UpcomingMeal {
+  id: ID!
+  name: String
+  type: String!
+  startTime: DateTimeOffset!
+  endTime: DateTimeOffset!
+}
+
+scalar Uri
+
+type User implements Node {
+  id: ID!
+  userId: String!
+  commonName: String!
+  firstName: String
+  lastName: String
+  email: String
+  puid: String!
+  favorites: [FavoritedItem!]!
+  printLists: [PrintList]
+}
+

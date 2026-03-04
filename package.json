@@ -1,23 +1,55 @@
 {
-  "name": "purdue-menu-tui",
-  "module": "src/index.tsx",
+  "name": "@rayhanadev/purdue-menus",
+  "version": "0.1.0",
+  "description": "A terminal UI for browsing Purdue University dining court menus",
+  "keywords": [
+    "cli",
+    "dining",
+    "menu",
+    "purdue",
+    "tui"
+  ],
+  "homepage": "https://github.com/rayhanadev/purdue-menu-tui",
+  "bugs": "https://github.com/rayhanadev/purdue-menu-tui/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rayhanadev/purdue-menu-tui.git"
+  },
+  "bin": {
+    "pmenu": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
-  "private": true,
   "scripts": {
-    "dev": "bun run --watch src/index.tsx"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "dev": "bun run --watch src/index.tsx",
+    "build": "bun build src/index.tsx --outdir dist --target bun --minify --banner '#!/usr/bin/env bun' && chmod +x dist/index.js",
+    "prepublishOnly": "bun run build",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "jotai": "^2.18.0"
+  },
+  "devDependencies": {
     "@babel/core": "^7.29.0",
-    "@babel/preset-typescript": "^7.28.5",
-    "@opentui/core": "^0.1.84",
-    "@opentui/solid": "^0.1.84",
-    "babel-preset-solid": "1.9.9",
-    "solid-js": "1.9.9"
+    "@factory/eslint-plugin": "^0.1.0",
+    "@opentui/core": "^0.1.86",
+    "@opentui/react": "^0.1.86",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.14",
+    "effect": "^3.19.19",
+    "eslint": "^10.0.2",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
+    "oxlint-tsgolint": "^0.16.0",
+    "react": "^19.2.4",
+    "typescript": "^5"
+  },
+  "engines": {
+    "bun": ">=1"
   }
 }
