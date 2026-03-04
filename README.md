@@ -1,6 +1,6 @@
 # pmenu
 
-<video src="demo.mp4" controls></video>
+<img width="1133" height="877" alt="image" src="https://github.com/user-attachments/assets/fe886683-6c50-4745-8b62-dd84fa965548" />
 
 A terminal UI for browsing Purdue University dining court menus.
 
