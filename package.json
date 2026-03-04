@@ -1,6 +1,6 @@
 {
   "name": "@rayhanadev/purdue-menus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A terminal UI for browsing Purdue University dining court menus",
   "keywords": [
     "cli",
